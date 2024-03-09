@@ -9,6 +9,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -34,7 +35,12 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->route('dashboard');
+        $url = parse_url(Session::get('url.intended'));
+        $path = isset($url['path']) ? $url['path'] : RouteServiceProvider::HOME;
+
+        return redirect($path);
+
+        // return redirect()->route('dashboard');
 
         // return redirect()->intended(RouteServiceProvider::HOME);
     }
